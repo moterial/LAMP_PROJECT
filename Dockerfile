@@ -8,3 +8,4 @@ RUN apt-get update \
     && docker-php-ext-configure intl \
     && docker-php-ext-install zip \
     && docker-php-ext-install intl
+RUN a2enmod rewrite
