@@ -48,6 +48,11 @@
                       <?= $validation->listErrors() ?>
                     </div>
                   <?php endif; ?>
+                  <?php if(!empty(session()->getFlashdata('fail'))): ?>
+                    <div class="alert alert-danger" role="alert" >
+                      <?= session()->getFlashdata('fail'); ?>
+                    </div>
+                  <?php endif; ?>
 
                   <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                     <?= form_submit('','LOGIN',['class' => 'btn btn-primary btn-lg'])?>

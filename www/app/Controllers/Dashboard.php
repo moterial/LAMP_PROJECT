@@ -8,4 +8,16 @@ class Dashboard extends BaseController
     {
         return view('Dashboard/index');
     }
+
+    public function profile()
+    {
+        $authDto = new \App\Models\AuthDto();
+        $userID = session()->get('userID');
+        $userInfo = $authDto->find($userID);
+        $data = [
+            'userInfo' => $userInfo
+        ];
+
+        return view('Dashboard/profile', $data);
+    }
 }

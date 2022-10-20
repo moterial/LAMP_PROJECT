@@ -103,8 +103,8 @@ class Auth extends BaseController
     public function logout()
     {
         if (session()->has('userID')) {
-            session()->destroy();
-            return redirect()->to('/auto?access=out')->with('fail', 'You are successfully logged out.');
+            session()->remove('userID');
+            return redirect()->to('/auth?access=out')->with('fail', 'You are successfully logged out.');
         }
     }
 }
