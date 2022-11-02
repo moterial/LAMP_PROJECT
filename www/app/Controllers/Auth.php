@@ -73,7 +73,14 @@ class Auth extends BaseController
             $user = $userDto->where('ac', $ac)->first();
 
             if (Hash::verify($pw, $user['pw'])) {
-                session()->set('userID', $user['userId']);
+                $sessionData = [
+                    'userId' => $user['userId'],
+                    'ac' => $user['ac'],
+                    'email' => $user['email'],
+                    'isLoggedIn' => true,
+                ];
+
+                session()->set($sessionData);
                 return redirect()->to('/dashboard');
             } else {
                 session()->setFlashdata('fail', 'Incorrect password.');
@@ -85,9 +92,13 @@ class Auth extends BaseController
 
     public function logout()
     {
-        if (session()->has('userID')) {
-            session()->remove('userID');
-            return redirect()->to('/auth?access=out')->with('fail', 'You are successfully logged out.');
+        if (session()->has('userId')) {
+            session()->remove('userId');
+            session()->remove('ac');
+            session()->remove('email');
+            session()->remove('isLoggedIn');
+            session()->set('isLoggedIn', false);
         }
+        return redirect()->to('/auth?access=out')->with('fail', 'You are successfully logged out.');
     }
 }

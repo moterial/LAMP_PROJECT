@@ -11,7 +11,7 @@
         </ul>
 
         <div class="text-end">
-            <?php if(session()->has('userID')): ?>
+            <?php if(session()->has('userId')): ?>
                 <a class="btn btn-outline-primary me-2"  href="<?php echo base_url('dashboard/Profile');?>">Profile</a>
                 <a class="btn btn-outline-primary me-2"  href="<?php echo base_url('auth/logout');?>">Logout</a>
             <?php else: ?>

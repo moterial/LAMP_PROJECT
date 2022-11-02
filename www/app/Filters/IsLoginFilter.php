@@ -10,7 +10,7 @@ class IsLoginFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
-        if (session()->has('userID')) {
+        if (session()->has('userId')) {
             return redirect()->to('/dashboard');
         }
     }

@@ -12,7 +12,7 @@ class Dashboard extends BaseController
     public function profile()
     {
         $userDto = new \App\Models\UserDto();
-        $userID = session()->get('userID');
+        $userID = session()->get('userId');
         $userInfo = $userDto->find($userID);
         $data = [
             'userInfo' => $userInfo
