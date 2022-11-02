@@ -11,9 +11,9 @@ class Dashboard extends BaseController
 
     public function profile()
     {
-        $authDto = new \App\Models\AuthDto();
+        $userDto = new \App\Models\UserDto();
         $userID = session()->get('userID');
-        $userInfo = $authDto->find($userID);
+        $userInfo = $userDto->find($userID);
         $data = [
             'userInfo' => $userInfo
         ];

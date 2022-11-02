@@ -29,9 +29,9 @@ class Auth extends BaseController
     public function validateRegister()
     {
 
-        $authDto = new \App\Models\AuthDto();
+        $userDto = new \App\Models\UserDto();
         
-        $validation =  $this->validate($authDto->getValidationRules());
+        $validation =  $this->validate($userDto->getRegisterValidationRules());
         if (!$validation) {
             return view('Auth/register', [
                 'validation' => $this->validator
@@ -48,9 +48,7 @@ class Auth extends BaseController
                 'email' => $email,
             ];
             
-            // $query = $authDto->insert($values);  <-- default but not working
-            $db = \Config\Database::connect();
-            $query = $db->table('users')->insert($values);
+            $query = $userDto->insert($values);
             if ($query) {
                 return redirect()->to('Auth/register')->with('success', 'You are successfully registered.');
             } else {
@@ -62,23 +60,8 @@ class Auth extends BaseController
 
     public function validateLogin()
     {
-        $validation = $this->validate([
-            'ac' => [
-                'label' => 'Account',
-                'rules' => 'required|is_not_unique[users.ac]',
-                'errors' => [
-                    'required' => '{field} is required.',
-                    'is_not_unique' => '{field} {value} does not exist.',
-                ]
-            ],
-            'pw' => [
-                'label' => 'Password',
-                'rules' => 'required',
-                'errors' => [
-                    'required' => '{field} is required.',
-                ]
-            ],
-        ]);
+        $userDto = new \App\Models\UserDto();
+        $validation = $this->validate($userDto->getLoginValidationRules());
 
         if (!$validation) {
             return view('Auth/login', [ 'validation' => $this->validator]);
@@ -86,15 +69,15 @@ class Auth extends BaseController
             $ac = $this->request->getVar('ac');
             $pw = $this->request->getVar('pw');
 
-            $authDto = new \App\Models\AuthDto();
-            $user = $authDto->where('ac', $ac)->first();
+            $userDto = new \App\Models\UserDto();
+            $user = $userDto->where('ac', $ac)->first();
 
             if (Hash::verify($pw, $user['pw'])) {
-                session()->set('userID', $user['id']);
+                session()->set('userID', $user['userId']);
                 return redirect()->to('/dashboard');
             } else {
                 session()->setFlashdata('fail', 'Incorrect password.');
-                return redirect()->to('/login')->withInput();
+                return redirect()->to('Auth/login')->withInput();
             }
         }
         
