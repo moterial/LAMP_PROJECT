@@ -27,8 +27,50 @@ class TaskDto extends Model
 
     protected $skipValidation = true;
 
+    function __construct()
+    {
+        parent::__construct();
+    }
     
-    
+    public function getCategoryOrTaskById($taskId)
+    {
+        return $this->where('taskId', $taskId)->first();
+    }
+
+    public function listCategoryIdByManagerId($userId)
+    {
+        return $this->where('userId', $userId)->select('taskId')->findAll();
+    }
+
+    public function listTaskByCategoryId($parentId)
+    {
+        return $this->where('parentId', $parentId)->findAll();
+    }
+
+    public function listAllCategoryAndTaskByUserId($userId)
+    {
+        $userDto = new \App\Models\UserDto();
+        $user = $userDto->getUserInfoByUserId($userId);
+        if ($user != null) {
+            $userRole = $user['privilege'];
+
+            if ($userRole == 'admin') {
+                # code...
+            }elseif ($userRole == 'manager') {
+                $ownerId = $userId;
+            }elseif ($userRole == 'user') {
+                $ownerId = $user['parentId'];
+            }
+
+            $categoryList = $this->listCategoryIdByManagerId($ownerId);
+
+            for ($i=0; $i < count($categoryList); $i++) {
+                $categoryList[$i]['taskList'] = $this->listTaskByCategoryId($categoryList[$i]['taskId']);
+            }
+
+            return $categoryList;
+        }
+    }
 }
 
 ?>

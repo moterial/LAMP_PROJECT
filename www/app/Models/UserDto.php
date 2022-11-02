@@ -85,6 +85,11 @@ class UserDto extends Model
         ],
     ];
 
+    function __construct()
+    {
+        parent::__construct();
+    }
+
     function getRegisterValidationRules()
     {
         return $this->registerValidationRules;
@@ -93,6 +98,16 @@ class UserDto extends Model
     function getLoginValidationRules()
     {
         return $this->loginValidationRules;
+    }
+
+    public function getUserInfoByUserId($userId)
+    {
+        return $this->where('userId', $userId)->first();
+    }
+
+    public function listUserIdByManagerId($parentId)
+    {
+        return $this->select('userId')->where('parentId', $parentId)->findAll();
     }
     
 }
