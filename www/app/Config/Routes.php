@@ -47,8 +47,7 @@ $routes->group('',['filter' => 'IsLoginFilter'], function($routes) {
     $routes->get('auth', 'Auth::login');
     $routes->get('auth/login', 'Auth::login');
     $routes->get('auth/register', 'Auth::register');
-    $routes->get('/','Home::index');
-    $routes->get('home', 'Home::index');
+    $routes->get('home/index', 'Home::index');
 });
 
 /*
