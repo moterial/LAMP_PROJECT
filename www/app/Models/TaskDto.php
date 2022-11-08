@@ -62,7 +62,7 @@ class TaskDto extends Model
 
     public function listCategoryNameByOwnerId($userId)
     {
-        return $this->where('userId', $userId)->select('content')->findAll();
+        return $this->where('userId', $userId)->select("content as 'categoryName'")->findAll();
     }
 
     public function listCategoryIdByOwnerId($userId)
@@ -73,6 +73,11 @@ class TaskDto extends Model
     public function listTaskByCategoryId($parentId)
     {
         return $this->where('parentId', $parentId)->findAll();
+    }
+
+    public function listTaskNameByCategoryId($parentId)
+    {
+        return $this->where('parentId', $parentId)->select("content as 'taskName'")->findAll();
     }
 
     public function listAllCategoryAndTaskByUserId($userId)
@@ -93,7 +98,7 @@ class TaskDto extends Model
             $categoryIdList = $this->listCategoryIdByOwnerId($ownerId);
             $categoryNameList = $this->listCategoryNameByOwnerId($ownerId);
             for ($i=0; $i < count($categoryIdList); $i++) {
-                $categoryNameList[$i]['taskList'] = $this->listTaskByCategoryId($categoryIdList[$i]['taskId']);
+                $categoryNameList[$i]['taskList'] = $this->listTaskNameByCategoryId($categoryIdList[$i]['taskId']);
             }
 
             return $categoryNameList;

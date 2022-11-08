@@ -7,7 +7,7 @@ class Dashboard extends BaseController
     public function index()
     {
         $taskDto = new \App\Models\TaskDto();
-        $data = $taskDto->listAllCategoryAndTaskByUserId(session('userId'));
+        $data['grid'] = $taskDto->listAllCategoryAndTaskByUserId(session('userId'));
         return view('Dashboard/index', $data);
     }
 
@@ -52,6 +52,28 @@ class Dashboard extends BaseController
         ];
 
         $taskDto->insert($values);
+
+        return redirect()->to('/Dashboard/index');
+    }
+
+    public function completeTask()
+    {
+        $taskDto = new \App\Models\TaskDto();
+
+        $categoryId = $this->request->getVar('categoryName');
+        $taskName = $this->request->getVar('taskName');
+        //TODO complete task
+
+        return redirect()->to('/Dashboard/index');
+    }
+
+    public function deleteTask()
+    {
+        $taskDto = new \App\Models\TaskDto();
+
+        $categoryId = $this->request->getVar('categoryName');
+        $taskName = $this->request->getVar('taskName');
+        //TODO delete task
 
         return redirect()->to('/Dashboard/index');
     }
