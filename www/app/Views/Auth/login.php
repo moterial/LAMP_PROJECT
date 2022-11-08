@@ -21,7 +21,7 @@
 
                 <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Login</p>
 
-                <?= form_open('auth/validateLogin', ['autocomplete' => 'off'])?>
+                <?= form_open('Auth/validateLogin', ['autocomplete' => 'off'])?>
                 
                   <?= csrf_field(); ?> <!-- CSRF protection (security) -->
 

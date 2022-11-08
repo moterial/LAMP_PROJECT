@@ -37,7 +37,35 @@ class TaskDto extends Model
         return $this->where('taskId', $taskId)->first();
     }
 
-    public function listCategoryIdByManagerId($userId)
+    public function getCategoryIdByName($name)
+    {
+        return $this->where('content', $name)->select('taskId')->first();
+    }
+
+    public function listCategoryNameAndIdByUserId($userId)
+    {
+        $userDto = new \App\Models\UserDto();
+        $user = $userDto->getUserInfoByUserId($userId);
+        if ($user != null) {
+            $userRole = $user['privilege'];
+
+            if ($userRole == 'admin') {
+                # code...
+            }elseif ($userRole == 'manager') {
+                $ownerId = $userId;
+            }elseif ($userRole == 'user') {
+                $ownerId = $user['parentId'];
+            }
+        }
+        return $this->where('userId', $ownerId)->select('content,taskId')->findAll();
+    }
+
+    public function listCategoryNameByOwnerId($userId)
+    {
+        return $this->where('userId', $userId)->select('content')->findAll();
+    }
+
+    public function listCategoryIdByOwnerId($userId)
     {
         return $this->where('userId', $userId)->select('taskId')->findAll();
     }
@@ -62,13 +90,13 @@ class TaskDto extends Model
                 $ownerId = $user['parentId'];
             }
 
-            $categoryList = $this->listCategoryIdByManagerId($ownerId);
-
-            for ($i=0; $i < count($categoryList); $i++) {
-                $categoryList[$i]['taskList'] = $this->listTaskByCategoryId($categoryList[$i]['taskId']);
+            $categoryIdList = $this->listCategoryIdByOwnerId($ownerId);
+            $categoryNameList = $this->listCategoryNameByOwnerId($ownerId);
+            for ($i=0; $i < count($categoryIdList); $i++) {
+                $categoryNameList[$i]['taskList'] = $this->listTaskByCategoryId($categoryIdList[$i]['taskId']);
             }
 
-            return $categoryList;
+            return $categoryNameList;
         }
     }
 }

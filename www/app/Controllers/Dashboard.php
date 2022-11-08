@@ -6,7 +6,9 @@ class Dashboard extends BaseController
 {
     public function index()
     {
-        return view('Dashboard/index');
+        $taskDto = new \App\Models\TaskDto();
+        $data = $taskDto->listAllCategoryAndTaskByUserId(session('userId'));
+        return view('Dashboard/index', $data);
     }
 
     public function profile()
@@ -20,4 +22,38 @@ class Dashboard extends BaseController
 
         return view('Dashboard/profile', $data);
     }
+
+    public function addCategory()
+    {
+        $taskDto = new \App\Models\TaskDto();
+
+        $categoryName = $this->request->getVar('categoryName');
+        $values = [
+            'role' => 'category',
+            'content' => $categoryName,
+            'userId' => session('userId'),
+        ];
+
+        $taskDto->insert($values);
+
+        return redirect()->to('/Dashboard/index');
+    }
+
+    public function addTask()
+    {
+        $taskDto = new \App\Models\TaskDto();
+
+        $categoryId = $this->request->getVar('categoryName');
+        $taskName = $this->request->getVar('taskName');
+        $values = [
+            'role' => 'task',
+            'content' => $taskName,
+            'parentId' => $categoryId,
+        ];
+
+        $taskDto->insert($values);
+
+        return redirect()->to('/Dashboard/index');
+    }
+
 }
