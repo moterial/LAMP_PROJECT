@@ -124,7 +124,6 @@
       <?=form_input('',set_value('taskName'),['name' => 'taskName', 'id' => 'taskName', 'class' => 'form-control'],'text')?>
       <label class="form-label">Task Name</label>
       </div>
-      </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
         <?= form_submit('','Add Task',['class' => 'btn btn-primary'])?>
@@ -132,6 +131,7 @@
       </div>
     </div>
   </div>
+</div>
 </div>
 
 <div class="modal fade" id="completeTaskModal" tabindex="-1" aria-hidden="true">
@@ -156,7 +156,6 @@
       <?=form_input('',set_value('taskName'),['name' => 'taskName', 'id' => 'taskName', 'class' => 'form-control'],'text')?>
       <label class="form-label">Task Name</label>
       </div>
-      </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
         <?= form_submit('','Add Task',['class' => 'btn btn-primary'])?>
@@ -164,6 +163,7 @@
       </div>
     </div>
   </div>
+</div>
 </div>
 
 <div class="modal fade" id="deleteTaskModal" tabindex="-1" aria-hidden="true">
@@ -188,7 +188,6 @@
       <?=form_input('',set_value('taskName'),['name' => 'taskName', 'id' => 'taskName', 'class' => 'form-control'],'text')?>
       <label class="form-label">Task Name</label>
       </div>
-      </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
         <?= form_submit('','Add Task',['class' => 'btn btn-primary'])?>
@@ -196,6 +195,7 @@
       </div>
     </div>
   </div>
+</div>
 </div>
 </section>
 <?= $this->endSection() ?>
