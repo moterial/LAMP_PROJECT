@@ -7,7 +7,7 @@ class Dashboard extends BaseController
     public function index()
     {
         $taskDto = new \App\Models\TaskDto();
-        $data['grid'] = $taskDto->listAllCategoryAndTaskByUserId(session('userId'));
+        $data['grid'] = $taskDto->getAllCategoryAndTask(session('userId'));
         return view('Dashboard/index', $data);
     }
 

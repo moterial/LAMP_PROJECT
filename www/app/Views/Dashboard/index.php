@@ -7,77 +7,100 @@
     echo '<script>console.log(this)</script>';
   }
 ?>
+<style>
+.scrolling-wrapper {
+  overflow-x: scroll;
+  height: 500px;
+  white-space: nowrap;
+}
 
-<section class="h-100 my-5" style="background-color: #eee;">
-    <div class="container h-100 w-100">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col-lg-12 col-xl-11 w-100">
-                <div class="card text-black" style="border-radius: 25px;">
-                    <div class="card-body p-md-5">
-                        <div class="row w-100">
-                            <div class="col-3">
-                                <div class="nav flex-column nav-tabs text-center" id="v-tabs-tab" role="tablist" aria-orientation="vertical">
-                                    <?php
-                                      for ($i = 0; $i < count($grid); $i++) {
-                                          $value = $grid[$i];
-                                          if ($i == 0) {
-                                            echo '<a class="nav-link active" id="tab-' . $value['categoryName'] . '-tab" data-mdb-toggle="tab" href="#v-tabs-' . $value['categoryName'] . '" role="tab">' . $value['categoryName'] . '</a>';
-                                          }else {
-                                            echo '<a class="nav-link" id="tab-' . $value['categoryName'] . '-tab" data-mdb-toggle="tab" href="#v-tabs-' . $value['categoryName'] . '" role="tab">' . $value['categoryName'] . '</a>';
-                                          }
-                                      }
-                                    ?>
-                                    </br>
-                                </div>
-                                <div class="row w-100 m-0">
-                                  <div class="col w-100 px-1"><button id="addCategory" type="button" class="btn btn-primary w-100 px-0" data-mdb-toggle="modal" data-mdb-target="#addCategoryModal">Add Category</button></div>
-                                  <div class="col w-100 px-1"><button id="addTask" type="button" class="btn btn-primary w-100 px-0" data-mdb-toggle="modal" data-mdb-target="#addTaskModal">Add Task</button></div>
-                                </div>
-                                </p>
-                                <div class="row w-100 m-0 px-1"><button id="completeTask" type="button" class="btn btn-primary w-100" data-mdb-toggle="modal" data-mdb-target="#completeTaskModal">Complete Task</button></div>
-                                </p>
-                                <div class="row w-100 m-0 px-1"><button id="deleteTask" type="button" class="btn btn-primary w-100" data-mdb-toggle="modal" data-mdb-target="#deleteTaskModal">Delete Task</button></div>
-                                </p>
-                                <?php if(isset($validation)): ?>
-                                  <div class="alert alert-danger" role="alert">
-                                    <?= $validation->listErrors() ?>
-                                  </div>
-                                <?php endif; ?>
-                                <?php if (!empty(session()->getFlashdata('success'))): ?>
-                                  <div class="alert alert-success"><?= session()->getFlashdata('success'); ?></div>
-                                  <?php header( "refresh:2; url=login" ); ?>
-                                <?php endif; ?>
-                            </div>
-                            <div class="col-9">
-                                <div class="tab-content" id="v-tabs-tabContent">
-                                    <?php
-                                      for ($i = 0; $i < count($grid); $i++) {
-                                          $value = $grid[$i];
-                                          if ($i == 0) {
-                                            echo '<div class="tab-pane fade show active" id="v-tabs-' . $value['categoryName'] . '" role="tabpanel">';
-                                          }else {
-                                            echo '<div class="tab-pane fade" id="v-tabs-' . $value['categoryName'] . '" role="tabpanel">';
-                                          }
-                                          echo '<div class="list-group list-group-light">';
-                                          for ($j = 0; $j < count($value['taskList']); $j++) {
-                                            $task = $value['taskList'][$j];
-                                            echo '<li class="list-group-item">';
-                                            echo '<label class="form-check-label">' . $task['taskName'] . '</label>';
-                                            echo '</li>';
-                                          }
-                                          echo '</div>';
-                                          echo '</div>';
-                                      }
-                                    ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+.scrolling-wrapper .card{
+  display: inline-block;
+}
+
+.fa-trash:hover{
+  color: red;
+  cursor: pointer;
+  transform: translateX(5px);
+  transition: transform .3s;
+}
+</style>
+
+
+
+
+<section class="vh-100 mt-5" style="background-color: #eee;">
+<div class="container py-5 h-100">
+        <div class="card rounded-3" style="height: 800px;">
+          <div class="card-body p-4">
+            <h4 class="text-center my-3 pb-3">To Do List</h4>
+            <?= form_open('dashboard/addCategory', ['autocomplete' => 'off', 'class'=>'row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2'])?>
+            <?= csrf_field(); ?>
+            <!-- <form class="row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2" action="Dashboard/addTask"> -->
+              <div class="col-12">
+                <div class="form-outline">
+                <?=form_input('',set_value('categoryName'),['name' => 'categoryName', 'id' => 'categoryName', 'class' => 'form-control'],'text')?>
+                  <!-- <input type="text" id="categoryName" name="categoryName" class="form-control" /> -->
+                  <label class="form-label" for="form1">Add Category</label>
                 </div>
+              </div>
+
+              <div class="col-12">
+                <?= form_submit('','ADD Category',['class' => 'btn btn-primary'])?>
+                <!-- <button type="submit" class="btn btn-primary">Save Category</button> -->
+              </div>
+
+            <!-- </form> -->
+            <?=form_close()?>
+              <div class="scrolling-wrapper container mt-5">
+                
+              <?php foreach($grid as $category): ?>
+                <div class="card p-3 me-4" style="height: 450px; overflow-y: scroll">
+                <?= $category['taskId']?>
+                <?php $hidden = ['CategoryName'=> $category['taskId']]?>
+                  <h4 class="text-center my-3 pb-3"> <?= $category['content']?></h4>
+                    <?= form_open('dashboard/addTask', ['autocomplete' => 'off', 'class'=>'row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2'],$hidden)?>
+                    <?= csrf_field(); ?>
+                    <!-- <form class="row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2"> -->
+                      <div class="col-12">
+                        <div class="form-outline">
+                          <?=form_input('',set_value('taskName'),['name' => 'taskName', 'id' => 'taskName', 'class' => 'form-control'],'text')?>
+                          <label class="form-label" for="form1">Add a task here</label>
+                        </div>
+                      </div>
+                      
+                      <div class="col-12">
+                      <?= form_submit('','SAVE TASK',['class' => 'btn btn-warning'])?>
+                        <!-- <button type="submit" class="btn btn-warning">Save Task</button> -->
+                      </div>
+                      <?=form_close()?>     
+                    <ul class="list-group rounded-0 mb-3">
+                                
+                                <?php foreach($category['taskList'] as $task): ?>
+                                  <?php if($task['finished']==0):?>
+                                    <li class="list-group-item border-0 d-flex align-items-center ps-0">
+                                      <input class="form-check-input me-3" type="checkbox" value="" aria-label="..." />
+                                      <?= $task['content']?>
+                                      <i class="fa-solid fa-trash ps-3" ></i>
+                                    </li>
+                                  <?php else: ?>
+                                      <li class="list-group-item border-0 d-flex align-items-center ps-0">
+                                        <input class="form-check-input me-3" type="checkbox" value="" aria-label="..." checked disabled />
+                                        <s><?= $task['content']?></s> &nbsp;&nbsp;(finished)
+                                        <i class="fa-solid fa-trash ps-3"></i>
+                                      </li>
+                                  <?php endif; ?>
+                                <?php endforeach; ?>
+
+                      </ul>
+                      <button type="submit" class="btn btn-danger float-end">Del Category</button>
+                </div>
+              <?php endforeach; ?>
             </div>
+          </div>
         </div>
-    </div>
-</select>
+  </div>
+</section>
 <!-- Modal -->
 <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
@@ -198,4 +221,7 @@
 </div>
 </div>
 </section>
+
+
 <?= $this->endSection() ?>
+

@@ -104,6 +104,30 @@ class TaskDto extends Model
             return $categoryNameList;
         }
     }
+
+    public function getAllCategory(){
+        return $this->where('role', 'category')->findAll();
+    }
+
+    public function getAllTaskByCategoryID($catID){
+        //find all task by category id and role = task order by finished asc
+        return $this->where('parentId', $catID)->where('role', 'task')->orderBy('finished', 'asc')->findAll();
+    }
+
+
+    public function getAllCategoryAndTask($userId)
+    {
+        $userDto = new \App\Models\UserDto();
+        $user = $userDto->getUserInfoByUserId($userId);
+        if ($user != null) {
+            $categoryList = $this->getAllCategory();
+            for ($i=0; $i < count($categoryList); $i++) {
+                $categoryList[$i]['taskList'] = $this->getAllTaskByCategoryID($categoryList[$i]['taskId']);
+            }
+            return $categoryList;
+        }
+    }
+
 }
 
 ?>
