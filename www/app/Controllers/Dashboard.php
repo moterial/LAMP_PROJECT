@@ -5,10 +5,15 @@ namespace App\Controllers;
 class Dashboard extends BaseController
 {
     public function index()
-    {
+    {   
+        //if user is not login, redirect to login page
+        if (!session()->has('userId')) {
+            return redirect()->to('/auth/login');
+        }
         $taskDto = new \App\Models\TaskDto();
         $data['grid'] = $taskDto->getAllCategoryAndTask(session('userId'));
         return view('Dashboard/index', $data);
+        
     }
 
     public function profile()
@@ -24,36 +29,54 @@ class Dashboard extends BaseController
     }
 
     public function addCategory()
-    {
-        $taskDto = new \App\Models\TaskDto();
+    {   
+        //check if user is manager
+        $userDto = new \App\Models\UserDto();
+        $userID = session()->get('userId');
+        $userInfo = $userDto->find($userID);
+        if($userInfo['privilege'] == 'manager'){
+            $taskDto = new \App\Models\TaskDto();
 
-        $categoryName = $this->request->getVar('categoryName');
-        $values = [
-            'role' => 'category',
-            'content' => $categoryName,
-            'userId' => session('userId'),
-        ];
+            $categoryName = $this->request->getVar('categoryName');
+            $values = [
+                'role' => 'category',
+                'content' => $categoryName,
+                'userId' => session('userId'),
+            ];
 
-        $taskDto->insert($values);
+            $taskDto->insert($values);
 
-        return redirect()->to('/Dashboard/index');
+            return redirect()->to('/Dashboard/index');
+        }else{
+            //if not manager, redirect to index with error message
+            return redirect()->to('/Dashboard/index')->with('error', 'You are not manager');
+        }
+
+        
     }
 
     public function addTask()
-    {
-        $taskDto = new \App\Models\TaskDto();
+    {   
+        $userDto = new \App\Models\UserDto();
+        $userID = session()->get('userId');
+        $userInfo = $userDto->find($userID);
+        if($userInfo['privilege'] == 'manager'){
+            $taskDto = new \App\Models\TaskDto();
+            $categoryId = $this->request->getVar('categoryId');
+            $taskName = $this->request->getVar('taskName');
+            $values = [
+                'role' => 'task',
+                'content' => $taskName,
+                'parentId' => $categoryId,
+            ];
 
-        $categoryId = $this->request->getVar('categoryName');
-        $taskName = $this->request->getVar('taskName');
-        $values = [
-            'role' => 'task',
-            'content' => $taskName,
-            'parentId' => $categoryId,
-        ];
+            $taskDto->insert($values);
 
-        $taskDto->insert($values);
-
-        return redirect()->to('/Dashboard/index');
+            return redirect()->to('/Dashboard/index');
+        }else{
+            //if not manager, redirect to index with error message
+            return redirect()->to('/Dashboard/index')->with('error', 'You are not manager');
+        }
     }
 
     public function completeTask()
@@ -67,15 +90,38 @@ class Dashboard extends BaseController
         return redirect()->to('/Dashboard/index');
     }
 
-    public function deleteTask()
+    public function deleteTask($taskid)
     {
-        $taskDto = new \App\Models\TaskDto();
+        $userDto = new \App\Models\UserDto();
+        $userID = session()->get('userId');
+        $userInfo = $userDto->find($userID);
+        if($userInfo['privilege'] == 'manager'){
+            $taskDto = new \App\Models\TaskDto();
+            $taskId = $taskid;
+            $taskDto->where('taskId', $taskId)->delete();
 
-        $categoryId = $this->request->getVar('categoryName');
-        $taskName = $this->request->getVar('taskName');
-        //TODO delete task
+            //TODO delete task
 
-        return redirect()->to('/Dashboard/index');
+            return redirect()->to('/Dashboard/index');
+        }else{
+            //if not manager, redirect to index with error message
+            return redirect()->to('/Dashboard/index')->with('error', 'You are not manager');
+        }
+    }
+
+    public function deleteCategory($catID){
+        $userDto = new \App\Models\UserDto();
+        $userID = session()->get('userId');
+        $userInfo = $userDto->find($userID);
+        if($userInfo['privilege'] == 'manager'){
+            $taskDto = new \App\Models\TaskDto();
+            $catId = $catID;
+            $taskDto->where('taskId', $catId)->delete();
+            return redirect()->to('/Dashboard/index');
+        }else{
+            //if not manager, redirect to index with error message
+            return redirect()->to('/Dashboard/index')->with('error', 'You are not manager');
+        }
     }
 
 }

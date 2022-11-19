@@ -57,12 +57,12 @@
               <?php foreach($grid as $category): ?>
                 <div class="card p-3 me-4" style="height: 450px; overflow-y: scroll">
                 <?= $category['taskId']?>
-                <?php $hidden = ['CategoryName'=> $category['taskId']]?>
                   <h4 class="text-center my-3 pb-3"> <?= $category['content']?></h4>
-                    <?= form_open('dashboard/addTask', ['autocomplete' => 'off', 'class'=>'row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2'],$hidden)?>
+                    <?= form_open('dashboard/addTask', ['autocomplete' => 'off', 'class'=>'row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2'])?>
                     <?= csrf_field(); ?>
                     <!-- <form class="row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2"> -->
                       <div class="col-12">
+                        <?= form_hidden('categoryId', $category['taskId'])?>
                         <div class="form-outline">
                           <?=form_input('',set_value('taskName'),['name' => 'taskName', 'id' => 'taskName', 'class' => 'form-control'],'text')?>
                           <label class="form-label" for="form1">Add a task here</label>
@@ -81,7 +81,7 @@
                                     <li class="list-group-item border-0 d-flex align-items-center ps-0">
                                       <input class="form-check-input me-3" type="checkbox" value="" aria-label="..." />
                                       <?= $task['content']?>
-                                      <i class="fa-solid fa-trash ps-3" ></i>
+                                        <a href="<?= base_url('dashboard/deleteTask/'.$task['taskId'])?>"><i class="fa-solid fa-trash ps-3" ></i></a>
                                     </li>
                                   <?php else: ?>
                                       <li class="list-group-item border-0 d-flex align-items-center ps-0">
@@ -222,6 +222,17 @@
 </div>
 </section>
 
+<script>
+
+$(document).ready(function() {
+  //check if there is error message from the controller
+  if (<?= session('error') ? 'true' : 'false' ?>) {
+    //alert the error message
+    alert('<?= session('error') ?>');
+  }
+});
+
+</script>
 
 <?= $this->endSection() ?>
 
