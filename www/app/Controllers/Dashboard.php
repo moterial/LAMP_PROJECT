@@ -9,10 +9,12 @@ class Dashboard extends BaseController
         //if user is not login, redirect to login page
         if (!session()->has('userId')) {
             return redirect()->to('/auth/login');
+        }else{
+            $taskDto = new \App\Models\TaskDto();
+            $data['grid'] = $taskDto->getAllCategoryAndTask(session('userId'));
+            return view('Dashboard/index', $data);
         }
-        $taskDto = new \App\Models\TaskDto();
-        $data['grid'] = $taskDto->getAllCategoryAndTask(session('userId'));
-        return view('Dashboard/index', $data);
+        
         
     }
 
