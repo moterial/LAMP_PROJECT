@@ -144,7 +144,7 @@
                                       <li class="list-group-item border-0 d-flex align-items-center ps-0">
                                         <input class="form-check-input me-3" type="checkbox" value="" aria-label="..." checked disabled />
                                         <s><?= $task['content']?></s> &nbsp;&nbsp;(finished)
-                                        <i class="fa-solid fa-trash ps-3"></i>
+                                        <a href="<?= base_url('dashboard/deleteTask/'.$task['taskId'])?>"><i class="fa-solid fa-trash ps-3"></i></a>
                                       </li>
                                   <?php endif; ?>
                                 <?php endforeach; ?>
