@@ -16,7 +16,8 @@ class TaskDto extends Model
     protected $useSoftDeletes = true; //true --> not deleted but not show when query, false --> direct deleted
     //temp false for testing
 
-    protected $allowedFields = ['role', 'content', 'parentId', 'userId'];
+    protected $allowedFields = ['role', 'content', 'parentId', 'userId','finished'];
+    
 
     protected $useTimestamps = true;
     //temp false for testing
@@ -24,6 +25,7 @@ class TaskDto extends Model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
     protected $deletedField  = 'deleted_at';
+
 
     protected $skipValidation = true;
 

@@ -78,6 +78,7 @@ class Auth extends BaseController
                     'ac' => $user['ac'],
                     'email' => $user['email'],
                     'isLoggedIn' => true,
+                    'privilege' => $user['privilege'],
                 ];
 
                 session()->set($sessionData);
