@@ -68,52 +68,75 @@
         <div class="card rounded-3" style="height: 800px;">
           <div class="card-body p-4">
             <h4 class="text-center my-3 pb-3">To Do List</h4>
+            <?php 
+              if (session()->get('privilege') == 'admin'|| session()->get('privilege') == 'manager') {
+            ?>
             <?= form_open('dashboard/addCategory', ['autocomplete' => 'off', 'class'=>'row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2'])?>
             <?= csrf_field(); ?>
-            <!-- <form class="row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2" action="Dashboard/addTask"> -->
               <div class="col-12">
                 <div class="form-outline">
                 <?=form_input('',set_value('categoryName'),['name' => 'categoryName', 'id' => 'categoryName', 'class' => 'form-control'],'text')?>
-                  <!-- <input type="text" id="categoryName" name="categoryName" class="form-control" /> -->
                   <label class="form-label" for="form1">Add Category</label>
                 </div>
               </div>
 
               <div class="col-12">
                 <?= form_submit('','ADD Category',['class' => 'btn btn-primary'])?>
-                <!-- <button type="submit" class="btn btn-primary">Save Category</button> -->
               </div>
-
-            <!-- </form> -->
             <?=form_close()?>
+            <?php
+              }
+            ?>
               <div class="scrolling-wrapper container mt-5">
               <? if($grid): ?>
               <?php foreach($grid as $category): ?>
                 <div class="card p-3 me-4" style="height: 450px; overflow-y: scroll">
                 <?= $category['taskId']?>
                   <h4 class="text-center my-3 pb-3"> <?= $category['content']?></h4>
+                    
                     <?= form_open('dashboard/addTask', ['autocomplete' => 'off', 'class'=>'row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2'])?>
                     <?= csrf_field(); ?>
                     <!-- <form class="row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2"> -->
                       <div class="col-12">
                         <?= form_hidden('categoryId', $category['taskId'])?>
                         <div class="form-outline">
+                        <?php 
+                          if (session()->get('privilege') == 'admin'|| session()->get('privilege') == 'manager') {
+                        ?>
                           <?=form_input('',set_value('taskName'),['name' => 'taskName', 'id' => 'taskName', 'class' => 'form-control'],'text')?>
+                        <?php
+                          }else{
+                        ?>
+                          <?=form_input('',set_value('taskName'),['name' => 'taskName', 'id' => 'taskName', 'class' => 'form-control','disabled'=>'true'],'text')?>
+                        <?php
+                          }
+                        ?>
                           <label class="form-label" for="form1">Add a task here</label>
                         </div>
                       </div>
                       
                       <div class="col-12">
+                      <?php 
+                        if (session()->get('privilege') == 'admin'|| session()->get('privilege') == 'manager') {
+                      ?>
                       <?= form_submit('','SAVE TASK',['class' => 'btn btn-warning'])?>
+                      <?php
+                        }else{
+                      ?>
+                      <?= form_submit('','SAVE TASK',['class' => 'btn btn-warning','disabled'=>'true'])?>
+                      <?php
+                        }
+                      ?>
                         <!-- <button type="submit" class="btn btn-warning">Save Task</button> -->
                       </div>
-                      <?=form_close()?>     
+                      <?=form_close()?>
+                        
                     <ul class="list-group rounded-0 mb-3">
                                 
                                 <?php foreach($category['taskList'] as $task): ?>
                                   <?php if($task['finished']==0):?>
                                     <li class="list-group-item border-0 d-flex align-items-center ps-0">
-                                      <input class="form-check-input me-3" type="checkbox" value="" aria-label="..." />
+                                      <input class="form-check-input me-3" type="checkbox" value="" aria-label="..." id="completeTask" data-task-id=<?= $task['taskId']?> />
                                       <?= $task['content']?>
                                         <a href="<?= base_url('dashboard/deleteTask/'.$task['taskId'])?>"><i class="fa-solid fa-trash ps-3" ></i></a>
                                     </li>
@@ -127,7 +150,11 @@
                                 <?php endforeach; ?>
 
                       </ul>
-                      <button type="submit" class="btn btn-danger float-end">Del Category</button>
+                      <?php if (session()->get('privilege') == 'admin'|| session()->get('privilege') == 'manager') {?>
+                      <a href="<?= base_url('dashboard/deleteCategory/'.$category['taskId'])?>"><button class="btn btn-danger float-end">Del Category</button></a>
+                      <?php } ?>
+                      
+
                 </div>
               <?php endforeach; ?>
               <? endif; ?>
@@ -146,6 +173,28 @@ $(document).ready(function() {
   if (<?= session('error') ? 'true' : 'false' ?>) {
     //alert the error message
     alert('<?= session('error') ?>');
+  }
+
+  //get completeTask button
+  var completeTask = document.getElementById('completeTask');
+  completeTask.onclick = function() {
+    //get the task id
+    var taskId = this.getAttribute('data-task-id');
+    //send ajax request to the controller
+    $.ajax({
+      url: '<?= base_url('dashboard/completeTask') ?>',
+      method: 'post',
+      data: {
+        taskId: taskId
+      },
+      success: function(response) {
+        //if the response is true
+        if (response) {
+          //reload the page
+          location.reload();
+        }
+      }
+    });
   }
 });
 

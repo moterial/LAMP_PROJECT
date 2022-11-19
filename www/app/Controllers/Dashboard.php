@@ -85,9 +85,13 @@ class Dashboard extends BaseController
     {
         $taskDto = new \App\Models\TaskDto();
 
-        $categoryId = $this->request->getVar('categoryName');
-        $taskName = $this->request->getVar('taskName');
-        //TODO complete task
+        $taskId = $this->request->getVar('taskId');
+        $values = [
+            'finished' => '1',
+        ];
+
+        $taskDto->update($taskId, $values);
+
 
         return redirect()->to('/Dashboard/index');
     }
