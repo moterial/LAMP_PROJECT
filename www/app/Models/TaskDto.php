@@ -17,7 +17,7 @@ class TaskDto extends Model
     //temp false for testing
 
     protected $allowedFields = ['role', 'content', 'parentId', 'userId','finished'];
-    
+
 
     protected $useTimestamps = true;
     //temp false for testing
@@ -44,23 +44,23 @@ class TaskDto extends Model
         return $this->where('content', $name)->select('taskId')->first();
     }
 
-    public function listCategoryNameAndIdByUserId($userId)
-    {
-        $userDto = new \App\Models\UserDto();
-        $user = $userDto->getUserInfoByUserId($userId);
-        if ($user != null) {
-            $userRole = $user['privilege'];
+    // public function listCategoryNameAndIdByUserId($userId)
+    // {
+    //     $userDto = new \App\Models\UserDto();
+    //     $user = $userDto->getUserInfoByUserId($userId);
+    //     if ($user != null) {
+    //         $userRole = $user['privilege'];
 
-            if ($userRole == 'admin') {
-                # code...
-            }elseif ($userRole == 'manager') {
-                $ownerId = $userId;
-            }elseif ($userRole == 'user') {
-                $ownerId = $user['parentId'];
-            }
-        }
-        return $this->where('userId', $ownerId)->select('content,taskId')->findAll();
-    }
+    //         if ($userRole == 'admin') {
+    //             # code...
+    //         }elseif ($userRole == 'manager') {
+    //             $ownerId = $userId;
+    //         }elseif ($userRole == 'user') {
+    //             $ownerId = $user['parentId'];
+    //         }
+    //     }
+    //     return $this->where('userId', $ownerId)->select('content,taskId')->findAll();
+    // }
 
     public function listCategoryNameByOwnerId($userId)
     {

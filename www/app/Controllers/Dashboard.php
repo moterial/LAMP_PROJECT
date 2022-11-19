@@ -36,7 +36,7 @@ class Dashboard extends BaseController
         $userDto = new \App\Models\UserDto();
         $userID = session()->get('userId');
         $userInfo = $userDto->find($userID);
-        if($userInfo['privilege'] == 'manager'){
+        if($userInfo['privilege'] == 'manager' || $userInfo['privilege'] == 'admin'){
             $taskDto = new \App\Models\TaskDto();
 
             $categoryName = $this->request->getVar('categoryName');
@@ -62,7 +62,7 @@ class Dashboard extends BaseController
         $userDto = new \App\Models\UserDto();
         $userID = session()->get('userId');
         $userInfo = $userDto->find($userID);
-        if($userInfo['privilege'] == 'manager'){
+        if($userInfo['privilege'] == 'manager' || $userInfo['privilege'] == 'admin' ){
             $taskDto = new \App\Models\TaskDto();
             $categoryId = $this->request->getVar('categoryId');
             $taskName = $this->request->getVar('taskName');
@@ -97,7 +97,7 @@ class Dashboard extends BaseController
         $userDto = new \App\Models\UserDto();
         $userID = session()->get('userId');
         $userInfo = $userDto->find($userID);
-        if($userInfo['privilege'] == 'manager'){
+        if($userInfo['privilege'] == 'manager' || $userInfo['privilege'] == 'admin' ){
             $taskDto = new \App\Models\TaskDto();
             $taskId = $taskid;
             $taskDto->where('taskId', $taskId)->delete();
@@ -115,7 +115,7 @@ class Dashboard extends BaseController
         $userDto = new \App\Models\UserDto();
         $userID = session()->get('userId');
         $userInfo = $userDto->find($userID);
-        if($userInfo['privilege'] == 'manager'){
+        if($userInfo['privilege'] == 'manager' || $userInfo['privilege'] == 'admin' ){
             $taskDto = new \App\Models\TaskDto();
             $catId = $catID;
             $taskDto->where('taskId', $catId)->delete();
