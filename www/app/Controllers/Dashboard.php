@@ -64,8 +64,8 @@ class Dashboard extends BaseController
         $userInfo = $userDto->find($userID);
         if($userInfo['privilege'] == 'manager' || $userInfo['privilege'] == 'admin' ){
             $taskDto = new \App\Models\TaskDto();
-            $categoryId = $this->request->getVar('categoryId');
-            $taskName = $this->request->getVar('taskName');
+            $categoryId = $this->request->getVar('categoryId'); //we can get categoryId of the task from website input field
+            $taskName = $this->request->getVar('taskName'); //we can get taskName from website input field
             $values = [
                 'role' => 'task',
                 'content' => $taskName,
@@ -76,7 +76,11 @@ class Dashboard extends BaseController
 
             return redirect()->to('/Dashboard/index');
         }else{
-            //if not manager, redirect to index with error message
+            //if not manager, redirect to index with error message and log to the log table
+            $logDto = new \App\Models\LogDto();
+            $wrongInput = $this->request->getVar('taskName');
+            //put all the params into the function and call it....
+        
             return redirect()->to('/Dashboard/index')->with('error', 'You are not manager');
         }
     }

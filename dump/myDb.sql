@@ -12,6 +12,8 @@ CREATE TABLE `myDb`.`Tasks` (`taskId` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   PRIMARY KEY (`taskId`), 
   `finished` INT NOT NULL DEFAULT 0) ENGINE = InnoDB;
 
+-- 1. create log table .....
+
 
 
 CREATE USER 'dev'@'%' IDENTIFIED BY 'comp3335';

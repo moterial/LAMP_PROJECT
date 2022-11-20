@@ -41,7 +41,7 @@ class Auth extends BaseController
             $ac = $this->request->getVar('ac');
             $email = $this->request->getVar('email');
             $pw = $this->request->getVar('pw');
-
+            
             $values = [
                 'ac' => $ac,
                 'pw' => Hash::hash($pw),
