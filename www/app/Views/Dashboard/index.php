@@ -91,7 +91,6 @@
               <? if($grid): ?>
               <?php foreach($grid as $category): ?>
                 <div class="card p-3 me-4" style="height: 450px; overflow-y: scroll">
-                <?= $category['taskId']?>
                   <h4 class="text-center my-3 pb-3"> <?= $category['content']?></h4>
                     
                     <?= form_open('dashboard/addTask', ['autocomplete' => 'off', 'class'=>'row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2'])?>
@@ -138,13 +137,25 @@
                                     <li class="list-group-item border-0 d-flex align-items-center ps-0">
                                       <input class="form-check-input me-3" type="checkbox" value="" aria-label="..." id="completeTask" data-task-id=<?= $task['taskId']?> />
                                       <?= $task['content']?>
+                                      <?php 
+                                        if (session()->get('privilege') == 'admin'|| session()->get('privilege') == 'manager') {
+                                      ?>
                                         <a href="<?= base_url('dashboard/deleteTask/'.$task['taskId'])?>"><i class="fa-solid fa-trash ps-3" ></i></a>
+                                      <?php
+                                        }
+                                      ?>
                                     </li>
                                   <?php else: ?>
                                       <li class="list-group-item border-0 d-flex align-items-center ps-0">
                                         <input class="form-check-input me-3" type="checkbox" value="" aria-label="..." checked disabled />
                                         <s><?= $task['content']?></s> &nbsp;&nbsp;(finished)
+                                        <?php 
+                                        if (session()->get('privilege') == 'admin'|| session()->get('privilege') == 'manager') {
+                                      ?>
                                         <a href="<?= base_url('dashboard/deleteTask/'.$task['taskId'])?>"><i class="fa-solid fa-trash ps-3"></i></a>
+                                      <?php
+                                        }
+                                      ?>
                                       </li>
                                   <?php endif; ?>
                                 <?php endforeach; ?>
