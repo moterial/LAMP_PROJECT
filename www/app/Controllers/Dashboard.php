@@ -79,8 +79,8 @@ class Dashboard extends BaseController
             //if not manager, redirect to index with error message and log to the log table
             $logDto = new \App\Models\LogDto();
             $wrongInput = $this->request->getVar('taskName');
-            //put all the params into the function and call it....
-        
+            //put all the params into the function and call it...
+            $logDto->writeToLog($eventId, $userId, $taskName, $datetime);
             return redirect()->to('/Dashboard/index')->with('error', 'You are not manager');
         }
     }
