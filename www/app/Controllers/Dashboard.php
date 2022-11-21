@@ -80,7 +80,7 @@ class Dashboard extends BaseController
             $logDto = new \App\Models\LogDto();
             $wrongInput = $this->request->getVar('taskName');
             //put all the params into the function and call it...
-            $logDto->writeToLog($eventId, $userId, $taskName, $datetime);
+            $logDto->writeToLog($userID, $wrongInput);
             return redirect()->to('/Dashboard/index')->with('error', 'You are not manager');
         }
     }

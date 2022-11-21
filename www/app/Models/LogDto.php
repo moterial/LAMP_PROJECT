@@ -32,23 +32,24 @@ class LogDto extends Model
 
 
     // Can add some function here
-    public function writeToLog($eventId, $userId, $content, $datetime){
+    public function writeToLog($userId, $content){
         //insert the content and userId into the log table using mysql statement.....
-        // Create connection
-        $conn = new mysqli($servername, $username, $password, $dbname);
-        // Check connection
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        } 
+    //     // Create connection
+    //     $conn = new mysqli($servername, $username, $password, $dbname);
+    //     // Check connection
+    //     if ($conn->connect_error) {
+    //         die("Connection failed: " . $conn->connect_error);
+    //     } 
 
-       $sql = "INSERT INTO Logs ('eventId', 'userId', 'content', 'datetime') VALUES ($eventId, $userId, $content, $datetime)";
+    //    $sql = "INSERT INTO Logs ('eventId', 'userId', 'content', 'datetime') VALUES ($eventId, $userId, $content, $datetime)";
 
-       if ($conn->query($sql) === TRUE) {
-            echo "New record created successfully";
-        } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
-        }
-        $conn->close();
+    //    if ($conn->query($sql) === TRUE) {
+    //         echo "New record created successfully";
+    //     } else {
+    //         echo "Error: " . $sql . "<br>" . $conn->error;
+    //     }
+    //     $conn->close();
+        $this->insert(['userId' => $userId, 'content' => $content]); 
     }
 
 
