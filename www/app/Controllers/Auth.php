@@ -41,6 +41,12 @@ class Auth extends BaseController
             $ac = $this->request->getVar('ac');
             $email = $this->request->getVar('email');
             $pw = $this->request->getVar('pw');
+
+            //prevent sql injection
+            $ac = htmlspecialchars($ac);
+            $email = htmlspecialchars($email);
+            $pw = htmlspecialchars($pw);
+
             
             $values = [
                 'ac' => $ac,
@@ -68,6 +74,10 @@ class Auth extends BaseController
         } else {
             $ac = $this->request->getVar('ac');
             $pw = $this->request->getVar('pw');
+
+            //prevent sql injection
+            $ac = htmlspecialchars($ac);
+            $pw = htmlspecialchars($pw);
 
             $userDto = new \App\Models\UserDto();
             $user = $userDto->where('ac', $ac)->first();

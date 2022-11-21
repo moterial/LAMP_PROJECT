@@ -12,6 +12,13 @@ class Dashboard extends BaseController
         }else{
             $taskDto = new \App\Models\TaskDto();
             $data['grid'] = $taskDto->getAllCategoryAndTask(session('userId'));
+            $userDto = new \App\Models\UserDto();
+            $userID = session()->get('userId');
+            $userInfo = $userDto->find($userID);
+            if($userInfo['privilege'] == 'admin' ){
+                $logDto = new \App\Models\LogDto();
+                $data['logs'] = $logDto->getAllLog();
+            }
             return view('Dashboard/index', $data);
         }
         

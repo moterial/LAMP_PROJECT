@@ -13,12 +13,12 @@ class LogDto extends Model
     protected $useAutoIncrement = true;
 
     protected $returnType     = 'array';
-    protected $useSoftDeletes = true; //true --> not deleted but not show when query, false --> direct deleted
 
-    protected $allowedFields = ['userId', 'content'];
-    protected $useTimestamps = true;
-    protected $dateFormat = 'datetime';
-    protected $createdField  = 'created_at'; //auto add created time
+    protected $allowedFields = ['userId', 'content','created_at'];
+
+
+
+
 
 
 
@@ -33,23 +33,21 @@ class LogDto extends Model
 
     // Can add some function here
     public function writeToLog($userId, $content){
-        //insert the content and userId into the log table using mysql statement.....
-    //     // Create connection
-    //     $conn = new mysqli($servername, $username, $password, $dbname);
-    //     // Check connection
-    //     if ($conn->connect_error) {
-    //         die("Connection failed: " . $conn->connect_error);
-    //     } 
+        //get the current datetime as log time
+        $date = date('Y-m-d H:i:s');
+        $values = [
+            'userId' => $userId,
+            'content' => $content,
+            'created_at' => $date,
+        ];
+        $this->insert($values);
+        
+    }
 
-    //    $sql = "INSERT INTO Logs ('eventId', 'userId', 'content', 'datetime') VALUES ($eventId, $userId, $content, $datetime)";
-
-    //    if ($conn->query($sql) === TRUE) {
-    //         echo "New record created successfully";
-    //     } else {
-    //         echo "Error: " . $sql . "<br>" . $conn->error;
-    //     }
-    //     $conn->close();
-        $this->insert(['userId' => $userId, 'content' => $content]); 
+    public function getAllLog(){
+        //get all log 3 days ago
+        $date = date('Y-m-d H:i:s', strtotime('-3 days'));
+        return $this->where('created_at >', $date)->findAll();
     }
 
 

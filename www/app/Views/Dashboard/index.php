@@ -26,7 +26,38 @@
 }
 </style>
 
+<?php if(session()->get('privilege') == 'admin'): ?>
+  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle" style="color:red;">Unusual Activities</h5>
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-2">UserID</div>
+          <div class="col-5">Content</div>
+          <div class="col-5">Time</div>
+        </div>
+        <?php foreach($logs as $log): ?>
+          <div class="row">
+            <div class="col-2"><?= $log['userID'] ?></div>
+            <div class="col-5"><?= $log['content'] ?></div>
+            <div class="col-5"><?= $log['created_at'] ?></div>
+          </div>
+        <?php endforeach; ?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="close">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+
+<?php endif; ?>
 
 
 <section class="vh-100 mt-5" style="background-color: #eee;">
@@ -180,6 +211,17 @@
 <script>
 
 $(document).ready(function() {
+
+
+  $(window).on('load', function() {
+        $('#exampleModalCenter').modal('show');
+  });
+
+  $('#close').click(function() {
+    $('#exampleModalCenter').modal('hide');
+  });
+
+
   //check if there is error message from the controller
   if (<?= session('error') ? 'true' : 'false' ?>) {
     //alert the error message
